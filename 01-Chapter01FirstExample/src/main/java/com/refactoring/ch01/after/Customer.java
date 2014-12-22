@@ -23,22 +23,16 @@ public class Customer {
     }
 
     public String statement() {
-        double totalAmount = 0;
-        int frequentRenterPoints = 0;
-        Enumeration rentals = _rentals.elements();
-        String result = "Rental Record for " + getName() + "\n";
-        while (rentals.hasMoreElements()) {
-            Rental each = (Rental) rentals.nextElement();
-            result += "\t" + each.getMovie().getTitle() + "\t" +
-                    String.valueOf(each.getCharge()) + "\n";
-        }
+        StringBuffer sb = new StringBuffer();
+        sb.append("Rental Record for " + getName() + "\n");
+        _rentals.forEach(each -> {
+            sb.append("\t" + each.getMovie().getTitle() + "\t" +
+                    String.valueOf(each.getCharge()) + "\n");
+        });
         //add footer lines
-        result += "Amount owed is " + String.valueOf(getTotalAmount()) +
-                "\n";
-        result += "You earned " + String.valueOf(getFrequentPoints())
-                +
-                " frequent renter points";
-        return result;
+        sb.append("Amount owed is " + String.valueOf(getTotalAmount()) + "\n");
+        sb.append("You earned " + String.valueOf(getFrequentPoints()) + " frequent renter points");
+        return sb.toString();
     }
 
     private double getTotalAmount() {

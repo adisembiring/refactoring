@@ -25,4 +25,6 @@ public class SummerPrice {
 
         return charge;
     }
+
+
 }

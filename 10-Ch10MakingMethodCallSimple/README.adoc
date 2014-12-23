@@ -1,0 +1,33 @@
+= Chapther 10: Making Method Call Simple
+
+== Replace Parameter with Explicit Method
+* Before
+[source,java,indent=0]
+----
+    static final int ENGINEER = 0;
+    static final int SALESMAN = 1;
+    static final int MANAGER = 2;
+    static Employee create(int type) {
+        switch (type) {
+            case ENGINEER:
+                return new Engineer();
+            case SALESMAN:
+                return new Salesman();
+            case MANAGER:
+                return new Manager();
+            default:
+                throw new IllegalArgumentException("Incorrect type code
+                        value");
+        }
+    }
+----
+
+* After
+[source,java,indent=0]
+----
+        Employee kent = Employee.create(ENGINEER)
+
+        to
+
+        Employee kent = Employee.createEngineer()
+----

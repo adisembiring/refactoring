@@ -1,6 +1,6 @@
-# Decompose Conditional #
-==
-## Replace Nested Conditional with Guard Clauses ##
+= Decompose Conditional
+
+== Replace Nested Conditional with Guard Clauses
 * Before
 [source,java,indent=0]
 ----
@@ -29,7 +29,7 @@
         };
 ----
 
-## Reversing the Conditions ##
+== Reversing the Conditions
 * From
 [source,java,indent=0]
 ----

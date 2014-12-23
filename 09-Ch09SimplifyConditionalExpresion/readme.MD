@@ -2,6 +2,8 @@
 ==
 ## Replace Nested Conditional with Guard Clauses ##
 * Before
+[source,java,indent=0]
+----
         double getPayAmount() {
             double result;
             if (_isDead) result = deadAmount();
@@ -14,18 +16,23 @@
             }
             return result;
         };
+----
 
 * After
+[source,java,indent=0]
+----
         double getPayAmount() {
             if (_isDead) return deadAmount();
             if (_isSeparated) return separatedAmount();
             if (_isRetired) return retiredAmount();
             return normalPayAmount();
         };
-
+----
 
 ## Reversing the Conditions ##
 * From
+[source,java,indent=0]
+----
         public double getAdjustedCapital() {
             double result = 0.0;
             if (_capital <= 0.0) return result;
@@ -34,9 +41,14 @@
             }
             return result;
         }
+----
+
 * To
+[source,java,indent=0]
+----
         public double getAdjustedCapital() {
             if (_capital <= 0.0) return 0.0;
             if (_intRate <= 0.0 || _duration <= 0.0) return 0.0;
             return (_income / _duration) * ADJ_FACTOR;
         }
+----

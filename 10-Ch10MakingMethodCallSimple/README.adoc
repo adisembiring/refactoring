@@ -31,3 +31,128 @@
 
         Employee kent = Employee.createEngineer()
 ----
+
+== Replace Parameter Name with Method
+* Before
+[source,java,indent=0]
+----
+    public double getPrice() {
+        int basePrice = _quantity * _itemPrice;
+        int discountLevel;
+        if (_quantity > 100) discountLevel = 2;
+        else discountLevel = 1;
+        double finalPrice = discountedPrice (basePrice, discountLevel);
+        return finalPrice;
+    }
+
+    to
+    public double getPrice() {
+        int basePrice = _quantity * _itemPrice;
+        int discountLevel = getDiscountLevel();
+        double finalPrice = discountedPrice (basePrice, discountLevel);
+        return finalPrice;
+    }
+    private int getDiscountLevel() {
+        if (_quantity > 100) return 2;
+        else return 1;
+    }
+----
+Remove discountLevel parameter ind discountPrice, change query by the method
+[source,java,indent=0]
+----
+    public double getPrice() {
+        int basePrice = _quantity * _itemPrice;
+        int discountLevel = getDiscountLevel();
+        double finalPrice = discountedPrice (basePrice);
+        return finalPrice;
+    }
+    private double discountedPrice (int basePrice) {
+        if (getDiscountLevel() == 2) return basePrice * 0.1;
+        else return basePrice * 0.05;
+    }
+----
+
+* Final Refactor Result
+[source,java,indent=0]
+----
+        public double getPrice() {
+            return discountedPrice ();
+        }
+        private double discountedPrice () {
+            if (getDiscountLevel() == 2) return getBasePrice() * 0.1;
+            else return getBasePrice() * 0.05;
+        }
+        private double getBasePrice() {
+            return _quantity * _itemPrice;
+        }
+
+        so I might as well use Inline Method on discountedPrice:
+        private double getPrice () {
+            if (getDiscountLevel() == 2) return getBasePrice() * 0.1;
+            else return getBasePrice() * 0.05;
+        }
+----
+
+== Introduce Parameter Object
+You have a group of parameters that naturally go together.
+
+[source,java,indent=0]
+----
+    class Account {
+        double getFlowBetween (Date start, Date end) {
+            double result = 0;
+            Enumeration e = _entries.elements();
+            while (e.hasMoreElements()) {
+                Entry each = (Entry) e.nextElement();
+                if (each.getDate().equals(start) ||
+                        each.getDate().equals(end) ||
+                        (each.getDate().after(start) &&
+                                each.getDate().before(end)))
+                {
+
+                    result += each.getValue();
+                }
+            }
+            return result;
+        }
+    }
+
+    ...
+    client code
+    double flow = anAccount.getFlowBetween(startDate, endDate);
+----
+
+Change range parameter to date range object
+
+[source,java,indent=0]
+----
+    class DateRange {
+        private final Date _start;
+        private final Date _end;
+
+        DateRange (Date start, Date end) {
+            _start = start;
+            _end = end;
+        }
+
+        boolean includes (Date arg) {
+            return (arg.equals(_start) ||
+                    arg.equals(_end) ||
+                    (arg.after(_start) && arg.before(_end)));
+        }
+    }
+
+    class Account{
+        double getFlowBetween (DateRange range) {
+            double result = 0;
+            Enumeration e = _entries.elements();
+            while (e.hasMoreElements()) {
+                Entry each = (Entry) e.nextElement();
+                if (range.includes(each.getDate())) {
+                    result += each.getValue();
+                }
+            }
+            return result;
+        }
+    }
+----

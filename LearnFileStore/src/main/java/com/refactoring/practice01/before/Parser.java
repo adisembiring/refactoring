@@ -71,7 +71,7 @@ public class Parser {
         return new FileInputStream(file);
     }
 
-    public FileOutputStream openOutputStream() throws IOException {
+    private FileOutputStream openOutputStream() throws IOException {
         if (file.exists()) {
             if (file.isDirectory()) {
                 throw new IOException("File '" + file + "' exists but is a directory");
@@ -90,7 +90,7 @@ public class Parser {
         return new FileOutputStream(file);
     }
 
-    public static void closeQuietly(Closeable closeable) {
+    private static void closeQuietly(Closeable closeable) {
         try {
             if (closeable != null) {
                 closeable.close();
